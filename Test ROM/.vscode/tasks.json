@@ -1,0 +1,25 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "assemble",
+            "type": "shell",
+            "command": "wla-z80",
+            "args": ["-i", "-o", "${fileBasenameNoExtension}.o", "${fileBasename}"]
+        },
+        {
+            "label": "link",
+            "type": "shell",
+            "command": "wlalink",
+            "args": ["-i", "-d", "linkfile", "rom.bin"]
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "dependsOrder": "sequence",
+            "dependsOn": ["assemble", "link"]
+        }
+    ]
+}

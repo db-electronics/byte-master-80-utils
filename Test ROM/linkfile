@@ -1,0 +1,10 @@
+[objects]
+test.o
+
+[libraries]
+
+[header]
+
+[footer]
+
+[definitions]

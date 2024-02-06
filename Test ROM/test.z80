@@ -1,0 +1,73 @@
+;==============================================================
+; Memory Map
+;==============================================================
+.memorymap
+    defaultslot 0
+    ; ROM
+    slotsize    $4000
+    slot        0       $0000
+    slot        1       $4000
+    slot        2       $8000
+    slot        3       $C000
+.endme
+
+.rombankmap
+    bankstotal      4
+    banksize        $4000
+    banks           4
+.endro
+
+    ;; wla-z80 -i -o test.o test.z80
+    ;; wlalink -i -d linkfile rom.bin
+
+;==============================================================
+; Bank 0
+;==============================================================
+.BANK   0   slot    0
+;==============================================================
+; Reset handler
+;==============================================================
+.ORG    $0000
+reset:
+    jr  entry
+
+.ORG    $0008
+    jr  entry
+
+.ORG    $0010
+    jr  entry
+
+.ORG    $0018
+    jr  entry
+
+.ORG    $0020
+    jr  entry
+
+.ORG    $0028
+    jr  entry
+
+.ORG    $0030
+    jr  entry
+
+.ORG    $0038
+mode1_interrupt:
+    jr  entry
+
+.ORG    $0066
+nmi:
+    jr  entry
+
+.ORG    $0070
+entry:
+    di
+    nop
+    out (0), a
+    out (1), a 
+    ld bc, $0100
+    ld (bc), a
+    inc bc
+    inc b
+    dec b
+    ld b, $AA
+    rlca
+    jr entry
