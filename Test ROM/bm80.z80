@@ -1,0 +1,3 @@
+
+.equ    BM80_ROM_PAGE_0     0
+.equ    BM80_RAM_PAGE_0     32

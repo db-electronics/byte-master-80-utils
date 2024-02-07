@@ -3,7 +3,6 @@
 ;==============================================================
 .memorymap
     defaultslot 0
-    ; ROM
     slotsize    $4000
     slot        0       $0000
     slot        1       $4000
@@ -12,57 +11,74 @@
 .endme
 
 .rombankmap
-    bankstotal      4
+    bankstotal      5
     banksize        $4000
-    banks           4
+    banks           5
 .endro
 
-    ;; wla-z80 -i -o test.o test.z80
-    ;; wlalink -i -d linkfile rom.bin
+;==============================================================
+; includes
+;==============================================================
+.include "bm80.z80"
 
-;==============================================================
-; Bank 0
-;==============================================================
-.BANK   0   slot    0
 ;==============================================================
 ; Reset handler
 ;==============================================================
+.BANK   0   slot    0
 .ORG    $0000
 reset:
-    jr  entry
+    di
+    jr  main
 
+;==============================================================
+; Interrupts
+;==============================================================
 .ORG    $0008
-    jr  entry
+    reti
 
 .ORG    $0010
-    jr  entry
+    reti
 
 .ORG    $0018
-    jr  entry
+    reti
 
 .ORG    $0020
-    jr  entry
+    reti
 
 .ORG    $0028
-    jr  entry
+    reti
 
 .ORG    $0030
-    jr  entry
+    reti
 
 .ORG    $0038
 mode1_interrupt:
-    jr  entry
+    reti
 
+;==============================================================
+; NMI
+;==============================================================
 .ORG    $0066
 nmi:
-    jr  entry
+    retn
 
-.ORG    $0070
-entry:
+;==============================================================
+; MAIN - test different opcodes for bm80 emulator
+;==============================================================
+main:
+
+    ; setup memory banks, 0-2 = pages 0-2 (ROM), 3 = RAM
+    ld a, BM80_ROM_PAGE_0
+    out (0), a
+    inc a
+    out (1), a 
+    inc a
+    out (2), a
+    ld a, BM80_RAM_PAGE_0
+    out (3), a
+
     di
     nop
-    out (0), a
-    out (1), a 
     ld bc, $0100
     ld (bc), a
     inc bc
@@ -70,4 +86,13 @@ entry:
     dec b
     ld b, $AA
     rlca
-    jr entry
+    jr main
+
+
+;==============================================================
+; Some far away code, org is relative to slot
+;==============================================================
+; .BANK   4   slot    1
+; .ORG    $0000
+;     di
+;     nop
