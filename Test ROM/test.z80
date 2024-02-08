@@ -16,6 +16,7 @@
     banks           5
 .endro
 
+
 ;==============================================================
 ; includes
 ;==============================================================
@@ -27,8 +28,9 @@
 .BANK   0   slot    0
 .ORG    $0000
 reset:
-    di
     jr  main
+
+.asc "bm80"
 
 ;==============================================================
 ; Interrupts
@@ -66,7 +68,7 @@ nmi:
 ; MAIN - test different opcodes for bm80 emulator
 ;==============================================================
 main:
-
+    di
     ; setup memory banks, 0-2 = pages 0-2 (ROM), 3 = RAM
     ld a, BM80_ROM_PAGE_0
     out (0), a
@@ -77,9 +79,8 @@ main:
     ld a, BM80_RAM_PAGE_0
     out (3), a
 
-    di
-    nop
-    ld bc, $0100
+    ; test slot 3 pointing to RAM
+    ld bc, $C000
     ld (bc), a
     inc bc
     inc b
