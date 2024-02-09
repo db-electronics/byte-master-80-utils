@@ -5,13 +5,15 @@ LDFLAGS = -i -d -s
 
 SFILES = test.z80
 IFILES = 
-OFILES = test.o
+OFILES = bm80bios.o
+TARGET_DIR = C:\Git\VisualStudio\byte-master-80-emulator\bm80-emulator
 
 all: $(OFILES) makefile
-	$(LD) $(LDFLAGS) linkfile test.bin
+	$(LD) $(LDFLAGS) linkfile bm80bios.bin
+	copy bm80bios.bin $(TARGET_DIR)
 
-test.o: test.z80
-	$(CC) $(CFLAGS) test.o test.z80
+bm80bios.o: test.z80
+	$(CC) $(CFLAGS) bm80bios.o test.z80
 
 $(OFILES): $(HFILES)
 

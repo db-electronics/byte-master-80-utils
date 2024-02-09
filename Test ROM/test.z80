@@ -79,16 +79,35 @@ main:
     ld a, BM80_RAM_PAGE_0
     out (3), a
 
-    ; test slot 3 pointing to RAM
-    ld bc, $C000
-    ld (bc), a
-    inc bc
+    ; go through a few opcodes
+    nop
+    ld bc, $0002
+    ld a, (bc)      ; should load the b from 'bm80'
+    ld bc, $C000    ; point to RAM
+    ld (bc), a      ; write accumulator to RAM
+
+    inc bc          ; no flags affected
     inc b
     dec b
-    ld b, $AA
+    ld b, $AE
+    inc b
+    inc b           ; carry?
+    inc b
+    dec b 
+    dec b           ; borrow?
     rlca
-    jr main
 
+    ex af, af'
+    inc a
+    ex af, af'
+    add hl, bc
+    add hl, bc      ; carry works
+
+    dec bc          ; no flags affected
+    inc c 
+    dec c 
+
+    jr main
 
 ;==============================================================
 ; Some far away code, org is relative to slot
