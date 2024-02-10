@@ -2,3 +2,4 @@
 *.lst
 *.o
 *.sym
+target_dir.txt

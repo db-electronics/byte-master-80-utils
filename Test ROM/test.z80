@@ -16,12 +16,6 @@
     banks           5
 .endro
 
-
-;==============================================================
-; includes
-;==============================================================
-.include "bm80.z80"
-
 ;==============================================================
 ; Reset handler
 ;==============================================================
@@ -29,8 +23,6 @@
 .ORG    $0000
 reset:
     jr  main
-
-.asc "bm80"
 
 ;==============================================================
 ; Interrupts
@@ -58,6 +50,12 @@ mode1_interrupt:
     reti
 
 ;==============================================================
+; HEADER
+;==============================================================
+.ORG    $0040
+.asc "bm80 test rom v0.1"
+
+;==============================================================
 ; NMI
 ;==============================================================
 .ORG    $0066
@@ -70,32 +68,34 @@ nmi:
 main:
     di
     ; setup memory banks, 0-2 = pages 0-2 (ROM), 3 = RAM
-    ld a, BM80_ROM_PAGE_0
-    out (0), a
-    inc a
-    out (1), a 
-    inc a
-    out (2), a
-    ld a, BM80_RAM_PAGE_0
-    out (3), a
+    call    sr_set_default_slots
 
     ; go through a few opcodes
     nop
-    ld bc, $0002
-    ld a, (bc)      ; should load the b from 'bm80'
-    ld bc, $C000    ; point to RAM
-    ld (bc), a      ; write accumulator to RAM
+    ld      bc, $0002
+    ld      a, (bc)     ; should load the b from 'bm80'
+    ld      bc, $C000   ; point to RAM
+    ld      (bc), a     ; write accumulator to RAM
 
-    inc bc          ; no flags affected
-    inc b
-    dec b
-    ld b, $AE
-    inc b
-    inc b           ; carry?
-    inc b
-    dec b 
-    dec b           ; borrow?
+    inc     bc          ; no flags affected
+    inc     b
+    dec     b
+    ld      b, $AE
+    inc     b
+    inc     b           ; carry?
+    inc     b
+    dec     b 
+    dec     b           ; borrow?
+
+    ; rotate
+    ld      a, $40      ; bit 6 = 1
     rlca
+    rlca                ; carry?
+    rlca                ; into bit 0?
+    ld      a, $02      ; bit 1 = 1
+    rrca
+    rrca
+    rrca                
 
     ex af, af'
     inc a
@@ -109,6 +109,7 @@ main:
 
     jr main
 
+
 ;==============================================================
 ; Some far away code, org is relative to slot
 ;==============================================================
@@ -116,3 +117,9 @@ main:
 ; .ORG    $0000
 ;     di
 ;     nop
+
+;==============================================================
+; includes
+;==============================================================
+.include "bm80.z80"
+.include "mmu.z80"

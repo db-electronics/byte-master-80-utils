@@ -6,7 +6,10 @@ LDFLAGS = -i -d -s
 SFILES = test.z80
 IFILES = 
 OFILES = bm80bios.o
-TARGET_DIR = C:\Git\VisualStudio\byte-master-80-emulator\bm80-emulator
+
+# Read TARGET_DIR from target_dir.txt file, make sure it's the only line in that file
+TARGET_DIR_FILE := target_dir.txt
+TARGET_DIR := $(file < $(TARGET_DIR_FILE))
 
 all: $(OFILES) makefile
 	$(LD) $(LDFLAGS) linkfile bm80bios.bin

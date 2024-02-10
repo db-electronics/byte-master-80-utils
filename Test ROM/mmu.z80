@@ -1,0 +1,15 @@
+
+;==============================================================
+; sr_set_default_slots
+;==============================================================
+sr_set_default_slots:
+    ; setup memory banks, 0-2 = pages 0-2 (ROM), 3 = RAM
+    ld      a, BM80_ROM_PAGE_0
+    out     (0), a
+    inc     a
+    out     (1), a 
+    inc     a
+    out     (2), a
+    ld      a, BM80_RAM_PAGE_0
+    out     (3), a
+    ret
