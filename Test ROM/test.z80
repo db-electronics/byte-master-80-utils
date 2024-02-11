@@ -78,6 +78,16 @@ main:
     ld      a, BM80_RAM_PAGE_0
     out     (3), a
 
+   ; rotate
+    ld      a, $40      ; bit 6 = 1
+    rlca
+    rlca                ; carry?
+    rlca                ; into bit 0?
+    ld      a, $02      ; bit 1 = 1
+    rrca
+    rrca
+    rrca          
+
     ; now we have RAM, try a call
     ld      sp, $FFF0
     call    sr_set_default_slots
@@ -97,17 +107,7 @@ main:
     inc     b           ; carry?
     inc     b
     dec     b 
-    dec     b           ; borrow?
-
-    ; rotate
-    ld      a, $40      ; bit 6 = 1
-    rlca
-    rlca                ; carry?
-    rlca                ; into bit 0?
-    ld      a, $02      ; bit 1 = 1
-    rrca
-    rrca
-    rrca                
+    dec     b           ; borrow?      
 
     ex af, af'
     inc a
