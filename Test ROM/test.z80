@@ -78,7 +78,7 @@ main:
     ld      a, BM80_RAM_PAGE_0
     out     (3), a
 
-   ; rotate
+   ; rotate test
     ld      a, $40      ; bit 6 = 1
     rlca
     rlca                ; carry?
@@ -94,11 +94,12 @@ main:
 
     ; go through a few opcodes
     nop
-    ld      bc, $0002
+    ld      bc, $0040
     ld      a, (bc)     ; should load the b from 'bm80'
     ld      bc, $C000   ; point to RAM
     ld      (bc), a     ; write accumulator to RAM
 
+    ; inc/dec tests
     inc     bc          ; no flags affected
     inc     b
     dec     b
