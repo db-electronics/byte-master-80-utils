@@ -70,16 +70,26 @@ main:
     ; can't do any calls before RAM is correctly mapped
     ; setup memory banks, 0-2 = pages 0-2 (ROM), 3 = RAM
     ld      a, BM80_ROM_PAGE_0
-    out     (0), a
+    out     (IO_SLOT_SELECT_0), a
     inc     a
-    out     (1), a 
+    out     (IO_SLOT_SELECT_1), a 
     inc     a
-    out     (2), a
+    out     (IO_SLOT_SELECT_2), a
     ld      a, BM80_RAM_PAGE_0
-    out     (3), a
+    out     (IO_SLOT_SELECT_3), a
 
     ; setup stack pointer
     ld      sp, $FFF0
+
+    ; test more row 1 opcodes
+    ld      b, $C0      ; point to beginning of RAM
+    ld      c, $00
+    ld      (bc), a     ; write 32 (a) to RAM,
+    add     hl, bc      ; add hl to bc, HL = 0xC000
+    inc     (hl)        ; RAM++
+    ld      a, (bc)     ; read RAM, should be 33
+    inc     bc
+    ld      (bc), a     ; write 33 (a) to RAM+1, RAM now has 33, 33
 
    ; rotate test, looking good
     ld      a, $40      ; bit 6 = 1

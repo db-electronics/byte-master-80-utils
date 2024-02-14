@@ -1,3 +1,8 @@
 
 .equ    BM80_ROM_PAGE_0     0
 .equ    BM80_RAM_PAGE_0     32
+
+.equ    IO_SLOT_SELECT_0    0xFC
+.equ    IO_SLOT_SELECT_1    0xFD
+.equ    IO_SLOT_SELECT_2    0xFE
+.equ    IO_SLOT_SELECT_3    0xFF
