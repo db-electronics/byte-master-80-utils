@@ -78,7 +78,10 @@ main:
     ld      a, BM80_RAM_PAGE_0
     out     (3), a
 
-   ; rotate test
+    ; setup stack pointer
+    ld      sp, $FFF0
+
+   ; rotate test, looking good
     ld      a, $40      ; bit 6 = 1
     rlca
     rlca                ; carry?
@@ -87,9 +90,42 @@ main:
     rrca
     rrca
     rrca          
+    rla 
+    rla 
+    rla 
+    rla
+    rra
+    rra
+    rra  
+
+    ; inc/dec tests
+    ld      a, $00      ; clear a
+    inc     a           ; inc all 8 bit registers
+    inc     b 
+    inc     c
+    inc     d
+    inc     e
+    inc     h
+    inc     l
+
+    dec     a           ; dec all 8 bit registers
+    dec     a           ; sign bit?
+
+    ld      a, $7E
+    inc     a           
+    inc     a           ; overflow
+    inc     a
+    dec     a
+    dec     a           ; underflow
+
+    ; point to RAM with HL
+    ld      hl, $C000   ; RAM
+    inc     (hl)        ; RAM++
+    dec     (hl)        ; RAM--
+
 
     ; now we have RAM, try a call
-    ld      sp, $FFF0
+
     call    sr_set_default_slots
 
     ; go through a few opcodes
